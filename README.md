@@ -47,11 +47,16 @@ Subscribe to the state inside a component:
 
 ```tsx
 import React from "react";
-import useZenState from "zentropy-react";
+import { useZenState, useZenMiddleware } from "zentropy-react";
 import counterState from "./counterState";
+
+function persistCounter(state, action) {
+  // Save your updated state
+}
 
 function Counter() {
   const { value } = useZenState(counterState);
+  useZenMiddleware(counterState, persistCounter);
 
   return (
     <div>
@@ -85,6 +90,18 @@ const { value } = useZenState(yourState);
 
 - **`state`** – A `zentropy` state instance.  
 - **Returns** – `{ value }`, where `value` is the current state.  
+
+### **`useZenMiddleware(state, (state: T, action: RK, payload?: any) => void)`**  
+
+Hook to add a middleware to listen for changes in the state and run side effects
+
+```ts
+useZenMiddleware(yourState, (state, action, payload) => {
+  if (action === 'update') {
+    saveToDB(state);
+  }
+});
+```
 
 ---
 
