@@ -98,4 +98,4 @@ const { value } = useZenState(yourState);
 
 ## **License**  
 
-ISC License.  
+MIT License.  
