@@ -13,7 +13,7 @@ A simple React adapter for using [`zentropy`](https://www.npmjs.com/package/zent
 ## **Installation**  
 
 ```sh
-npm install zentropy zentropy-react
+npm install zentropy-react
 ```
 
 ---
