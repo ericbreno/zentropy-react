@@ -1,6 +1,6 @@
 {
   "name": "zentropy-react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight React adapter for Zentropy state management.",
   "main": "dist/index.js",
   "module": "dist/index.js",
