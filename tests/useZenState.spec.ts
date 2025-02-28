@@ -55,4 +55,52 @@ describe("useZenState hook should", () => {
     // Since it's unmounted, it shouldn't update the hook state
     expect(result.current.value).toBe(1);
   });
+
+
+
+});
+
+interface TestState {
+  count: number;
+  text: string;
+}
+
+describe("useZenState hook watch should", () => {
+  let state: State<TestState, string>;
+
+  beforeEach(() => {
+    state = makeState({ initial: { count: 0, text: "hello" } });
+  });
+
+  it("update full state when no watch option is provided", () => {
+    const { result } = renderHook(() => useZenState(state));
+
+    act(() => {
+      state.update({ count: 1, text: "world" });
+    });
+
+    expect(result.current.value).toEqual({ count: 1, text: "world" });
+  });
+
+  it("update only watched state when watch option is provided", () => {
+    const { result } = renderHook(() => useZenState(state, { watch: "text" }));
+
+    expect(result.current.value).toBe("hello");
+
+    act(() => {
+      state.update({ count: 1, text: "world" });
+    });
+
+    expect(result.current.value).toBe("world");
+  });
+
+  it("not update when unrelated state changes", () => {
+    const { result } = renderHook(() => useZenState(state, { watch: "count" }));
+
+    act(() => {
+      state.update({ count: 0, text: "updated" });
+    });
+
+    expect(result.current.value).toBe(0); // Count remains unchanged
+  });
 });

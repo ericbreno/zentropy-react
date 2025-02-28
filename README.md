@@ -76,16 +76,72 @@ function Counter() {
 export default Counter;
 ```
 
+### Watching only part of a complex state
+
+Zentropy-react also supports watching only a property from a state. This is intended to be used in cases where it makes sense to have an object state but certain components may rely only on part of it to re-render.
+
+```tsx
+import React from "react";
+import { useZenState } from "zentropy-react";
+
+type FilterState = {
+  date?: Date;
+  email?: string;
+}
+const initial: FilterState = {}
+const filtersState = makeState({
+  initial
+});
+
+function EmailInput() {
+  const { value: email } = useZenState(filtersState, { watch: 'email' });
+
+  return <>...</>;
+}
+
+function DateInput() {
+  const { value: date } = useZenState(filtersState, { watch: 'date' });
+
+  return <>...</>;
+}
+
+
+function MyFilters() {
+  const { value: filters } = useZenState(filtersState);
+
+  return <>
+    <EmailInput />
+    <DateInput />
+  </>;
+}
+```
+
+> Please notice that using `watch` param will **only** refresh if the property has changed, so take this in account
+if you're reading the `stateValue` returned
+
 ---
 
 ## **API**  
 
-### **`useZenState(state)`**  
+### **`useZenState(state, options?: { watch?: string })`**  
 
-A React hook that subscribes to a `zentropy` state and keeps components in sync.  
+A React hook that subscribes to a `zentropy` state and keeps components in sync.
 
 ```ts
+const yourState = makeState({
+  initial: {
+    name: 'Eric',
+    online: true
+  }
+});
+
 const { value } = useZenState(yourState);
+// value -> { name: 'Eric', online: true }
+
+// Or watch only for a property in the state
+const { value, stateValue } = useZenState(yourState, { watch: 'name' });
+// value -> 'Eric'
+// stateValue -> { name: 'Eric', online: true }
 ```
 
 - **`state`** – A `zentropy` state instance.  
